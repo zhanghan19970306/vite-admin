@@ -56,6 +56,14 @@ const routes = [
             layout: "default"
         },
         component: () => import("@/views/sys/Conf/Index.vue")
+    },
+    {
+        path: "/sys/dict",
+        name: "SysDict",
+        meta: {
+            layout: "default"
+        },
+        component: () => import("@/views/sys/Dict/Index.vue")
     }
 ]
 

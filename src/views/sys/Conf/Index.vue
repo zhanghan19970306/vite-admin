@@ -34,7 +34,7 @@
     <EditConf ref="EditConfRef" @finish="getTableData" />
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ref, defineComponent } from "vue"
 import axios from "@/utils/request"
 import { message, Modal } from "ant-design-vue"
@@ -43,122 +43,216 @@ import { PlusOutlined } from "@ant-design/icons-vue"
 import AddConf from "./Add.vue"
 import EditConf from "./Edit.vue"
 
-export default defineComponent({
-    components: {
-        AddConf,
-        EditConf,
-        PlusOutlined
+const columns = ref([
+    {
+        title: "参数名",
+        dataIndex: "key"
     },
-    setup() {
-        const columns = ref([
-            {
-                title: "参数名",
-                dataIndex: "key"
-            },
-            {
-                title: "参数值",
-                dataIndex: "value"
-            },
-            {
-                title: "参数描述",
-                dataIndex: "description"
-            },
-            {
-                title: "状态",
-                dataIndex: "isEnable",
-                slots: { customRender: "isEnable" }
-            },
-            {
-                title: "操作",
-                dataIndex: "operation",
-                slots: { customRender: "operation" },
-                width: 160,
-                fixed: "right"
-            }
-        ])
-
-        const loading = ref(false)
-        const dataSource = ref<any>([])
-        const getTableData = async () => {
-            try {
-                loading.value = true
-
-                const { data } = await axios.get("/api/sys/conf")
-
-                dataSource.value = data
-            } catch (error) {
-                console.log(error)
-            } finally {
-                loading.value = false
-            }
-        }
-        // 获取第一次数据
-        getTableData()
-
-        const AddConfRef = ref<any>(null)
-        const openAddDialog = () => AddConfRef.value?.open?.()
-
-        const EditConfRef = ref<any>(null)
-        const openEditDialog = (record: any) => EditConfRef.value?.open?.(record)
-
-        // 删除角色
-        const onDelete = async ({ id }: any) => {
-            try {
-                Modal.confirm({
-                    title: "确定删除该参数?",
-                    async onOk() {
-                        const { msg } = await axios.delete<any, any>(`/api/sys/conf/${id}`)
-
-                        // 成功反馈
-                        message.success(msg)
-
-                        // 刷新数据
-                        getTableData()
-                    }
-                })
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        // 启用/禁用 角色
-        const onStatus = async (record: any) => {
-            try {
-                Modal.confirm({
-                    title: `确定${record.isEnable ? "禁用" : "启用"}该角色?`,
-                    async onOk() {
-                        const { msg } = await axios.patch<any, any>(`/api/sys/conf/status`, {
-                            id: record.id,
-                            isEnable: !record.isEnable
-                        })
-
-                        // 成功反馈
-                        message.success(msg)
-
-                        // 刷新数据
-                        getTableData()
-                    }
-                })
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        return {
-            columns,
-            loading,
-            dataSource,
-            getTableData,
-
-            AddConfRef,
-            openAddDialog,
-
-            EditConfRef,
-            openEditDialog,
-
-            onDelete,
-            onStatus
-        }
+    {
+        title: "参数值",
+        dataIndex: "value"
+    },
+    {
+        title: "参数描述",
+        dataIndex: "description"
+    },
+    {
+        title: "状态",
+        dataIndex: "isEnable",
+        slots: { customRender: "isEnable" }
+    },
+    {
+        title: "操作",
+        dataIndex: "operation",
+        slots: { customRender: "operation" },
+        width: 160,
+        fixed: "right"
     }
-})
+])
+
+const loading = ref(false)
+const dataSource = ref<any>([])
+const getTableData = async () => {
+    try {
+        loading.value = true
+
+        const { data } = await axios.get("/api/sys/conf")
+
+        dataSource.value = data
+    } catch (error) {
+        console.log(error)
+    } finally {
+        loading.value = false
+    }
+}
+// 获取第一次数据
+getTableData()
+
+const AddConfRef = ref<any>(null)
+const openAddDialog = () => AddConfRef.value?.open?.()
+
+const EditConfRef = ref<any>(null)
+const openEditDialog = (record: any) => EditConfRef.value?.open?.(record)
+
+// 删除角色
+const onDelete = async ({ id }: any) => {
+    try {
+        Modal.confirm({
+            title: "确定删除该参数?",
+            async onOk() {
+                const { msg } = await axios.delete<any, any>(`/api/sys/conf/${id}`)
+
+                // 成功反馈
+                message.success(msg)
+
+                // 刷新数据
+                getTableData()
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// 启用/禁用 角色
+const onStatus = async (record: any) => {
+    try {
+        Modal.confirm({
+            title: `确定${record.isEnable ? "禁用" : "启用"}该角色?`,
+            async onOk() {
+                const { msg } = await axios.patch<any, any>(`/api/sys/conf/status`, {
+                    id: record.id,
+                    isEnable: !record.isEnable
+                })
+
+                // 成功反馈
+                message.success(msg)
+
+                // 刷新数据
+                getTableData()
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// export default defineComponent({
+//     components: {
+//         AddConf,
+//         EditConf,
+//         PlusOutlined
+//     },
+//     setup() {
+//         const columns = ref([
+//             {
+//                 title: "参数名",
+//                 dataIndex: "key"
+//             },
+//             {
+//                 title: "参数值",
+//                 dataIndex: "value"
+//             },
+//             {
+//                 title: "参数描述",
+//                 dataIndex: "description"
+//             },
+//             {
+//                 title: "状态",
+//                 dataIndex: "isEnable",
+//                 slots: { customRender: "isEnable" }
+//             },
+//             {
+//                 title: "操作",
+//                 dataIndex: "operation",
+//                 slots: { customRender: "operation" },
+//                 width: 160,
+//                 fixed: "right"
+//             }
+//         ])
+
+//         const loading = ref(false)
+//         const dataSource = ref<any>([])
+//         const getTableData = async () => {
+//             try {
+//                 loading.value = true
+
+//                 const { data } = await axios.get("/api/sys/conf")
+
+//                 dataSource.value = data
+//             } catch (error) {
+//                 console.log(error)
+//             } finally {
+//                 loading.value = false
+//             }
+//         }
+//         // 获取第一次数据
+//         getTableData()
+
+//         const AddConfRef = ref<any>(null)
+//         const openAddDialog = () => AddConfRef.value?.open?.()
+
+//         const EditConfRef = ref<any>(null)
+//         const openEditDialog = (record: any) => EditConfRef.value?.open?.(record)
+
+//         // 删除角色
+//         const onDelete = async ({ id }: any) => {
+//             try {
+//                 Modal.confirm({
+//                     title: "确定删除该参数?",
+//                     async onOk() {
+//                         const { msg } = await axios.delete<any, any>(`/api/sys/conf/${id}`)
+
+//                         // 成功反馈
+//                         message.success(msg)
+
+//                         // 刷新数据
+//                         getTableData()
+//                     }
+//                 })
+//             } catch (error) {
+//                 console.log(error)
+//             }
+//         }
+
+//         // 启用/禁用 角色
+//         const onStatus = async (record: any) => {
+//             try {
+//                 Modal.confirm({
+//                     title: `确定${record.isEnable ? "禁用" : "启用"}该角色?`,
+//                     async onOk() {
+//                         const { msg } = await axios.patch<any, any>(`/api/sys/conf/status`, {
+//                             id: record.id,
+//                             isEnable: !record.isEnable
+//                         })
+
+//                         // 成功反馈
+//                         message.success(msg)
+
+//                         // 刷新数据
+//                         getTableData()
+//                     }
+//                 })
+//             } catch (error) {
+//                 console.log(error)
+//             }
+//         }
+
+//         return {
+//             columns,
+//             loading,
+//             dataSource,
+//             getTableData,
+
+//             AddConfRef,
+//             openAddDialog,
+
+//             EditConfRef,
+//             openEditDialog,
+
+//             onDelete,
+//             onStatus
+//         }
+//     }
+// })
 </script>

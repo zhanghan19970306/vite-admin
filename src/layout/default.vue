@@ -8,6 +8,10 @@
                     <a-menu-item key="/sys/role">角色管理</a-menu-item>
                     <a-menu-item key="/sys/perm">权限管理</a-menu-item>
                     <a-menu-item key="/sys/menu">菜单管理</a-menu-item>
+                    <a-menu-item key="/sys/conf">参数配置</a-menu-item>
+                    <a-menu-item key="/sys/dict">数据字典</a-menu-item>
+                    <a-menu-item key="/sys/white">白名单管理</a-menu-item>
+                    <a-menu-item key="/sys/white">敏感词管理</a-menu-item>
                 </a-menu>
             </a-layout-sider>
             <a-layout style="padding: 0 24px 24px">
